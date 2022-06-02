@@ -2,15 +2,13 @@
 
 _Note that this bot is a WIP. It currently has very basic functionality and I'm not sure what will be added in the future._
 
-Say Whatever bot is a Telegram bot that reads your messages aloud and sends them as audio. An instance of this bot is currently running. To use it, interact with the bot [@SayWhatever_bot](https://t.me/SayWhatever_bot) in Telegram. Currently you can send messages directly to the bot, starting with a language selection command (e.g., `/enus` (em-us) or `/ptbr` (pt-br)). This instance might not be available at all times and is subject to errors, since this is still a WIP.
-
-You can also run your own instance of the bot by following the steps in the next section.
-
-The bot uses [gTTS](https://gtts.readthedocs.io/en/latest/index.html) for generating audio from text. gTTS is a Python package for interfacing with the Google Translate's text-to-speech API.
+Say Whatever bot is a Telegram bot that reads your messages aloud and sends them as audio. An instance of this bot is currently running. To use it, interact with the bot [@SayWhatever_bot](https://t.me/SayWhatever_bot) in Telegram. This instance might not be available at all times and is subject to errors, since this is still a WIP.
 
 ## Set up your own instance
 
 You can run an instance of the bot by getting a token using [Telegram's Botfather](https://telegram.me/botfather). Then add the token as an environment variable `TOKEN` (i.e., create an .env file with `TOKEN=x`, where `x` is your token).
+
+You also need an `OWNER_ID` environment variable, which is the ID of the user who will be able to use the bot. To get your ID, run the file `get_user_id.py` and send `/get_id` to the bot.
 
 Install the needed packages with:
 
@@ -24,9 +22,28 @@ Then, run the bot with:
 python saywhatever-bot.py
 ```
 
-## Command list
+## Usage
 
-Use `/start` or `/help` to get a list of commands. The language options are given below:
+Currently there are two ways you can use the bot:
+
+- Write "@SayWhatever_bot" in any chat and type your message after it.
+- Send messages directly to the bot, starting with a language selection command (e.g., `/enus` (em-us) or `/ptbr` (pt-br)).
+
+You can also run your own instance of the bot by following the steps in the next section.
+
+The bot uses [gTTS](https://gtts.readthedocs.io/en/latest/index.html) for generating audio from text. gTTS is a Python package for interfacing with the Google Translate's text-to-speech API.
+
+## Commands
+
+Use `/help` to get a list of commands. Basic commands are:
+
+```plaintext
+/start - set language preferences
+/help - get a list of commands
+/tts - speak in the preferred language
+```
+
+The language options are given below:
 
 ```plaintext
 /enus - speak in English (US)
