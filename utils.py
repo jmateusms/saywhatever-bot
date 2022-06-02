@@ -56,16 +56,16 @@ class memo:
         '''
         if os.path.isdir('mem') == False:
             os.mkdir('mem')	
-        self.tts_mem = defaultdict(dict)
+        self.user_prefs = defaultdict(dict)
         self.sync_mem()
 
     def load_mem(self):
         '''
         Load memory from mem folder. Objects are pickle files.
         '''
-        if os.path.exists('mem/tts_mem.pkl'):
-            with open('mem/tts_mem.pkl', 'rb') as f:
-                self.tts_mem = pickle.load(f)
+        if os.path.exists('mem/user_prefs.pkl'):
+            with open('mem/user_prefs.pkl', 'rb') as f:
+                self.user_prefs = pickle.load(f)
         else:
             self.create_mem()
 
@@ -73,5 +73,5 @@ class memo:
         '''
         Sync memory with mem folder. Objects are pickle files.
         '''
-        with open('mem/tts_mem.pkl', 'wb') as f:
-            pickle.dump(self.tts_mem, f)
+        with open('mem/user_prefs.pkl', 'wb') as f:
+            pickle.dump(self.user_prefs, f)

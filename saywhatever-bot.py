@@ -6,7 +6,7 @@ from telebot import types
 from gtts import gTTS
 from io import BytesIO
 import requests
-# from utils import *
+from utils import *
 
 # load api token and owner id
 load_dotenv()
@@ -26,14 +26,19 @@ def get_audio(text, lang='en', tld='com'):
 bot = telebot.TeleBot(TOKEN)
 
 # start bot memory
-# mem = memo()
+mem = memo()
 
 @bot.message_handler(commands=['start', 'help'])
 def start(message):
     bot.send_message(message.chat.id,
     '''
 Hi, I'm Say Whatever bot! Send me a message starting with one of the commands for language/accent selection and I will read them aloud.
+
+If you set your preferred language/accent (with /setup), you will be able to use me directly in other chats, by starting your message with @SayWhatever_bot. This also allows you to use the /tts command, which will use your preferred settings.
+
 /start, /help - show this message
+/setup - set up your preferences
+/tts - speak in your preferred language
 /enus - speak in English (US)
 /enuk - speak in English (UK)
 /enau - speak in English (Australia)
@@ -50,16 +55,99 @@ Hi, I'm Say Whatever bot! Send me a message starting with one of the commands fo
 /frca - speak in French (Canada)
 ''')
 
+@bot.message_handler(commands=['setup'])
+def setup(message):
+    if message.chat.id in mem.user_prefs:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.add('Yes', 'No')
+        bot.send_message(message.chat.id, f'Your preferred language/accent is already set to {mem.user_prefs[message.chat.id]["name"]}. Do you want to change it?', reply_markup=markup)
+        bot.register_next_step_handler(message, setup_lang)
+    else:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.add('English (US)', 'English (UK)', 'English (Australia)', 'English (Canada)', 'English (New Zealand)', 'English (Ireland)', 'English (South Africa)', 'English (India)', 'Spanish (Mexico)', 'Spanish (Spain)', 'Portuguese (Brazil)', 'Portuguese (Portugal)', 'French (France)', 'French (Canada)')
+        bot.send_message(message.chat.id, 'Please select your preferred language/accent:', reply_markup=markup)
+        bot.register_next_step_handler(message, setup_lang)
+
+@bot.message_handler(commands=[])
+def setup_lang(message):
+    if message.text == 'English (US)':
+        lang = 'en'
+        tld = 'com'
+    elif message.text == 'English (UK)':
+        lang = 'en'
+        tld = 'co.uk'
+    elif message.text == 'English (Australia)':
+        lang = 'en'
+        tld = 'com.au'
+    elif message.text == 'English (Canada)':
+        lang = 'en'
+        tld = 'ca'
+    elif message.text == 'English (New Zealand)':
+        lang = 'en'
+        tld = 'co.nz'
+    elif message.text == 'English (Ireland)':
+        lang = 'en'
+        tld = 'ie'
+    elif message.text == 'English (South Africa)':
+        lang = 'en'
+        tld = 'co.za'
+    elif message.text == 'English (India)':
+        lang = 'en'
+        tld = 'in'
+    elif message.text == 'Spanish (Mexico)':
+        lang = 'es'
+        tld = 'com.mx'
+    elif message.text == 'Spanish (Spain)':
+        lang = 'es'
+        tld = 'es'
+    elif message.text == 'Portuguese (Brazil)':
+        lang = 'pt'
+        tld = 'com.br'
+    elif message.text == 'Portuguese (Portugal)':
+        lang = 'pt'
+        tld = 'pt'
+    elif message.text == 'French (France)':
+        lang = 'fr'
+        tld = 'fr'
+    elif message.text == 'French (Canada)':
+        lang = 'fr'
+        tld = 'ca'
+    else:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.add('English (US)', 'English (UK)', 'English (Australia)', 'English (Canada)', 'English (New Zealand)', 'English (Ireland)', 'English (South Africa)', 'English (India)', 'Spanish (Mexico)', 'Spanish (Spain)', 'Portuguese (Brazil)', 'Portuguese (Portugal)', 'French (France)', 'French (Canada)')
+        bot.send_message(message.chat.id, 'Please select your preferred language/accent:', reply_markup=markup)
+        bot.register_next_step_handler(message, setup_lang)
+        return
+    mem.user_prefs[message.chat.id] = {'name': message.text, 'lang': lang, 'tld': tld}
+    bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.chat.id]["name"]}.')
+
+@bot.message_handler(commands=['tts'])
+def tts(message):
+    if len(message.text) < 5:
+        bot.send_message(message.chat.id, 'The text must not be empty.')
+    elif message.chat.id in mem.user_prefs:
+        text = message.text[4:]
+        try:
+            fp = get_audio(
+                text,
+                lang=mem.user_prefs[message.chat.id]['lang'],
+                tld=mem.user_prefs[message.chat.id]['tld'])
+        except AssertionError:
+            bot.send_message(message.chat.id, 'Your text could not be spoken.')
+            return
+        bot.send_voice(message.chat.id, voice=fp)
+    else:
+        bot.send_message(message.chat.id, 'Please set your preferred language/accent with /setup.')
+
 @bot.message_handler(commands=['enus'])
 def enus(message):
     if len(message.text) < 7:
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='com'),
-            )
+                get_audio(message.text[6:], lang='en', tld='com'))
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
@@ -69,7 +157,7 @@ def enuk(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='co.uk'),
             )
@@ -82,7 +170,7 @@ def enau(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='com.au'),
             )
@@ -95,7 +183,7 @@ def enca(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='ca'),
             )
@@ -108,7 +196,7 @@ def ennz(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='co.nz'),
             )
@@ -121,7 +209,7 @@ def enie(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='ie'),
             )
@@ -134,7 +222,7 @@ def ensa(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='co.za'),
             )
@@ -147,7 +235,7 @@ def enin(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='en', tld='co.in'),
             )
@@ -160,7 +248,7 @@ def esmx(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='es', tld='com.mx'),
             )
@@ -173,7 +261,7 @@ def eses(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='es', tld='es'),
             )
@@ -186,7 +274,7 @@ def ptbr(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='pt', tld='com.br'),
             )
@@ -199,7 +287,7 @@ def ptpt(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='pt', tld='pt'),
             )
@@ -212,7 +300,7 @@ def frfr(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='fr', tld='fr'),
             )
@@ -225,7 +313,7 @@ def frca(message):
         bot.send_message(message.chat.id, 'The text must not be empty.')
     else:
         try:
-            bot.send_audio(
+            bot.send_voice(
                 message.chat.id,
                 get_audio(message.text[6:], lang='fr', tld='ca'),
             )
