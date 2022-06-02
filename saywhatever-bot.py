@@ -36,7 +36,7 @@ def start(message):
     '''
 Hi, I'm SayWhatever bot! Send me a message starting with one of the commands for language/accent selection and I will read them aloud.
 
-If you set your preferred language/accent (with /setup), you will be able to use me directly in other chats, by starting your message with @SayWhatever_bot. This also allows you to use the /tts command, which will use your preferred settings.
+If you set your preferred language/accent (with /setup), you will be able to use me directly in other chats, by starting your message with @SayWhateverBot. This also allows you to use the /tts command, which will use your preferred settings.
 
 /start - set up your preferences
 /help - show this message
@@ -138,7 +138,7 @@ def setup_lang(message):
         bot.register_next_step_handler(message, setup_lang)
         return
     mem.user_prefs[message.from_user.id] = {'name': message.text, 'lang': lang, 'tld': tld}
-    bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhatever_bot, or send me a private message starting with /tts. For a full list of commands, type /help.')
+    bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhateverBot, or send me a private message starting with /tts. For a full list of commands, type /help.')
     mem.sync_mem()
 
 @bot.message_handler(commands=['tts'])
