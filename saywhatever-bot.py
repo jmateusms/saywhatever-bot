@@ -11,7 +11,6 @@ import requests
 # load api token and owner id
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
-OWNER_ID = int(os.getenv('OWNER_ID'))
 
 def get_audio(text, lang='en', tld='com'):
     tts = gTTS(text=text, lang=lang, tld=tld)
