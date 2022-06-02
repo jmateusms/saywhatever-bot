@@ -3,6 +3,9 @@
 # this will allow you to configure the OWNER_ID variable
 # with a OWNER_ID, only you will be able to use certain functions of the bot
 
+# send /chatid to the bot and you will receive the chat ID as a reply
+# this will allow you to configure the DUMP_ID variable
+
 # import packages
 import os
 from dotenv import load_dotenv
@@ -21,6 +24,13 @@ bot = telebot.TeleBot(TOKEN)
 def get_user_id(message):
     if message.from_user.first_name in [OWNER_NAME]:
         bot.send_message(message.chat.id, f'Your user ID is {message.from_user.id}')
+    else:
+        bot.send_message(message.chat.id, 'You do not possess that kind of power.')
+
+@bot.message_handler(commands=['chatid'])
+def get_user_id(message):
+    if message.from_user.first_name in [OWNER_NAME]:
+        bot.send_message(message.chat.id, f"This chat's ID is {message.chat.id}")
     else:
         bot.send_message(message.chat.id, 'You do not possess that kind of power.')
 

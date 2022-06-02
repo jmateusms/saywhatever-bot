@@ -6,9 +6,20 @@ Say Whatever bot is a Telegram bot that reads your messages aloud and sends them
 
 ## Set up your own instance
 
+### Environment variables
+
 You can run an instance of the bot by getting a token using [Telegram's Botfather](https://telegram.me/botfather). Then add the token as an environment variable `TOKEN` (i.e., create an .env file with `TOKEN=x`, where `x` is your token).
 
-You also need an `OWNER_ID` environment variable, which is the ID of the user who will be able to use the bot. To get your ID, run the file `get_user_id.py` and send `/get_id` to the bot.
+You also need an `OWNER_ID` environment variable, which is the ID of the user who will be able to use the bot. To get your ID, run the file `get_id.py` and send `/userid` to the bot.
+
+Lastly, you need a `DUMP_ID` variable, which is a chat ID for a group where the bot will send the generated voice recording, before sending it to the user. This must be done because Telegram's API for inline results only allows sending either a URL or a file ID. The voice recordings are sent to the `DUMP_ID` chat and then immediately deleted.
+
+- Create a group and add the bot.
+- Run the file `get_id.py` and send `/chatid` to the bot.
+- Set `DUMP_ID` to the value of the chat ID.
+- (Optional) Archive the chat, so that its notifications won't appear for you.
+
+### Dependencies
 
 Install the needed packages with:
 
@@ -16,7 +27,9 @@ Install the needed packages with:
 pip install -r requirements.txt
 ```
 
-Then, run the bot with:
+### Running the bot
+
+Run the bot with:
 
 ```bash
 python saywhatever-bot.py

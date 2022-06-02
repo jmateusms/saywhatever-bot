@@ -12,6 +12,7 @@ from utils import *
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 OWNER_ID = int(os.getenv('OWNER_ID'))
+DUMP_ID = int(os.getenv('DUMP_ID'))
 
 def get_audio(text, lang='en', tld='com'):
     tts = gTTS(text=text, lang=lang, tld=tld)
@@ -168,14 +169,14 @@ def inline_query(query):
             query.query,
             lang=mem.user_prefs[query.from_user.id]['lang'],
             tld=mem.user_prefs[query.from_user.id]['tld'])
-        fp_voice = bot.send_voice(query.from_user.id, voice=fp, disable_notification=True)
+        fp_voice = bot.send_voice(DUMP_ID, voice=fp, disable_notification=True)
         fp_id = fp_voice.voice.file_id
         bot.answer_inline_query(
             query.id, [types.InlineQueryResultCachedVoice(
                 id=query.query,
                 voice_file_id=fp_id,
                 title=f'Spoken text in {mem.user_prefs[query.from_user.id]["name"]}.')])
-        bot.delete_message(fp_voice.chat.id, fp_voice.message_id)
+        bot.delete_message(DUMP_ID, fp_voice.message_id)
     except AssertionError:
         pass
 
