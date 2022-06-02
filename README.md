@@ -2,7 +2,7 @@
 
 _Note that this bot is a WIP. It currently has very basic functionality and I'm not sure what will be added in the future._
 
-Say Whatever bot is a Telegram bot that reads your messages aloud and sends them as audio. An instance of this bot is currently running. To use it, interact with the bot [@SayWhatever_bot](https://t.me/SayWhatever_bot) in Telegram. This instance might not be available at all times and is subject to errors, since this is still a WIP.
+Say Whatever bot is a Telegram bot that reads your messages aloud and sends them as audio. An instance of this bot is currently running. To use it, interact with the bot [@SayWhateverBot](https://t.me/SayWhateverBot) in Telegram. This instance might not be available at all times and is subject to errors, since this is still a WIP.
 
 ## Set up your own instance
 
@@ -39,7 +39,7 @@ python saywhatever-bot.py
 
 Currently there are two ways you can use the bot:
 
-- Write "@SayWhatever_bot" in any chat and type your message after it.
+- Write "@SayWhateverBot" in any chat and type your message after it.
 - Send messages directly to the bot, starting with a language selection command (e.g., `/enus` (em-us) or `/ptbr` (pt-br)).
 
 You can also run your own instance of the bot by following the steps in the next section.

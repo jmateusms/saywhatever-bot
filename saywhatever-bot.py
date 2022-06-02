@@ -142,11 +142,18 @@ def setup_lang(message):
     mem.sync_mem()
 
 @bot.message_handler(commands=['tts'])
-def tts(message):
-    if len(message.text) < 5:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def tts(message, ignore_size=False):
+    if len(message.text) < 5 and not ignore_size:
+        # bot.send_message(message.chat.id, 'The text must not be empty.')
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, tts, True)
+        return
     elif message.from_user.id in mem.user_prefs:
-        text = message.text[4:]
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[4:]
         try:
             fp = get_audio(
                 text,
@@ -181,182 +188,280 @@ def inline_query(query):
         pass
 
 @bot.message_handler(commands=['enus'])
-def enus(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enus(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enus, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='com'))
+                get_audio(text, lang='en', tld='com'))
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['enuk'])
-def enuk(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enuk(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enuk, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='co.uk'),
+                get_audio(text, lang='en', tld='co.uk'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['enau'])
-def enau(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enau(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enau, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='com.au'),
+                get_audio(text, lang='en', tld='com.au'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['enca'])
-def enca(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enca(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enca, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='ca'),
+                get_audio(text, lang='en', tld='ca'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['ennz'])
-def ennz(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def ennz(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, ennz, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='co.nz'),
+                get_audio(text, lang='en', tld='co.nz'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['enie'])
-def enie(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enie(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enie, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='ie'),
+                get_audio(text, lang='en', tld='ie'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['ensa'])
-def ensa(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def ensa(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, ensa, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='co.za'),
+                get_audio(text, lang='en', tld='co.za'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['enin'])
-def enin(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def enin(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, enin, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='en', tld='co.in'),
+                get_audio(text, lang='en', tld='co.in'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['esmx'])
-def esmx(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def esmx(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, esmx, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='es', tld='com.mx'),
+                get_audio(text, lang='es', tld='com.mx'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['eses'])
-def eses(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def eses(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, eses, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='es', tld='es'),
+                get_audio(text, lang='es', tld='es'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['ptbr'])
-def ptbr(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def ptbr(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, ptbr, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='pt', tld='com.br'),
+                get_audio(text, lang='pt', tld='com.br'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['ptpt'])
-def ptpt(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def ptpt(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, ptpt, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='pt', tld='pt'),
+                get_audio(text, lang='pt', tld='pt'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['frfr'])
-def frfr(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def frfr(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, frfr, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='fr', tld='fr'),
+                get_audio(text, lang='fr', tld='fr'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 @bot.message_handler(commands=['frca'])
-def frca(message):
-    if len(message.text) < 7:
-        bot.send_message(message.chat.id, 'The text must not be empty.')
+def frca(message, ignore_size=False):
+    if len(message.text) < 7 and not ignore_size:
+        markup = telebot.types.ForceReply(selective=False)
+        get_reply = bot.send_message(message.chat.id, "Please, type a message:", reply_markup=markup)
+        bot.register_next_step_handler(get_reply, frca, True)
+        return
     else:
+        if ignore_size:
+            text = message.text
+        else:
+            text = message.text[6:]
         try:
             bot.send_voice(
                 message.chat.id,
-                get_audio(message.text[6:], lang='fr', tld='ca'),
+                get_audio(text, lang='fr', tld='ca'),
             )
         except AssertionError:
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
