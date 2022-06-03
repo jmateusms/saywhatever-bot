@@ -169,7 +169,7 @@ def tts(message, ignore_size=False):
 @bot.inline_handler(lambda query: type(query.query) == str)
 def inline_query(query):
     if not query.from_user.id in mem.user_prefs:
-        bot.answer_inline_query(query.id, [], switch_pm_text='Set your preferred language/accent.', switch_pm_parameter='setup')
+        bot.answer_inline_query(query.id, [], switch_pm_text='Set your preferred language/accent.', switch_pm_parameter='setup', cache_time=0)
         return
     try:
         fp = get_audio(
@@ -182,7 +182,7 @@ def inline_query(query):
             query.id, [types.InlineQueryResultCachedVoice(
                 id=query.query,
                 voice_file_id=fp_id,
-                title=f'Spoken text in {mem.user_prefs[query.from_user.id]["name"]}.')])
+                title=f'Spoken text in {mem.user_prefs[query.from_user.id]["name"]}.')], cache_time=0)
         bot.delete_message(DUMP_ID, fp_voice.message_id)
     except AssertionError:
         pass
