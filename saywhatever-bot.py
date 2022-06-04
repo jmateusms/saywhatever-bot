@@ -76,7 +76,7 @@ def setup(message):
     if message.from_user.id in mem.user_prefs:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add('Yes', 'No')
-        bot.send_message(message.chat.id, f'Your preferred language/accent is already set to {mem.user_prefs[message.chat.id]["name"]}. Do you want to change it?', reply_markup=markup)
+        bot.send_message(message.chat.id, f'Your preferred language/accent is already set to {mem.user_prefs[message.from_user.id]["name"]}. Do you want to change it?', reply_markup=markup)
         bot.register_next_step_handler(message, setup_lang)
     else:
         bot.send_message(message.chat.id, "Hi, I'm SayWhatever bot! Let's set up your preferences for using the bot.")
