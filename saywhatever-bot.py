@@ -73,7 +73,7 @@ def reset(message):
 
 @bot.message_handler(commands=['start'])
 def setup(message):
-    if message.chat.id in mem.user_prefs:
+    if message.from_user.id in mem.user_prefs:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add('Yes', 'No')
         bot.send_message(message.chat.id, f'Your preferred language/accent is already set to {mem.user_prefs[message.chat.id]["name"]}. Do you want to change it?', reply_markup=markup)

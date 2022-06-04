@@ -74,3 +74,9 @@ The language options are given below:
 /frfr - speak in French (France)
 /frca - speak in French (Canada)
 ```
+
+## To do
+
+- Add persistent storage for bot memory when deployed in platforms such as Heroku.
+- Clean up code by using a dictionary instead of listing all the languages.
+- Add more languages/accents (maybe allow choosing each separately).
