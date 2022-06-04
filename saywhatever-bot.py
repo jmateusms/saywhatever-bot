@@ -131,11 +131,13 @@ def setup_lang(message):
     elif message.text == 'French (Canada)':
         lang = 'fr'
         tld = 'ca'
-    else:
+    elif message.text == 'Yes':
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add('English (US)', 'English (UK)', 'English (Australia)', 'English (Canada)', 'English (New Zealand)', 'English (Ireland)', 'English (South Africa)', 'English (India)', 'Spanish (Mexico)', 'Spanish (Spain)', 'Portuguese (Brazil)', 'Portuguese (Portugal)', 'French (France)', 'French (Canada)')
         bot.send_message(message.chat.id, 'Please select your preferred language/accent:', reply_markup=markup)
         bot.register_next_step_handler(message, setup_lang)
+        return
+    else:
         return
     mem.user_prefs[message.from_user.id] = {'name': message.text, 'lang': lang, 'tld': tld}
     bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhateverBot, or send me a private message starting with /tts. For a full list of commands, type /help.')
