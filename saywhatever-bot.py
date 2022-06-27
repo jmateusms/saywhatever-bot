@@ -138,9 +138,12 @@ def setup_lang(message):
         bot.register_next_step_handler(message, setup_lang)
         return
     else:
+        markup = types.ReplyKeyboardRemove(selective=False)
+        bot.send_message(message.chat.id, 'No changes made to your preferred language/accent.', reply_markup=markup)
         return
     mem.user_prefs[message.from_user.id] = {'name': message.text, 'lang': lang, 'tld': tld}
-    bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhateverBot, or send me a private message starting with /tts. For a full list of commands, type /help.')
+    markup = types.ReplyKeyboardRemove(selective=False)
+    bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhateverBot, or send me a private message starting with /tts. For a full list of commands, type /help.', reply_markup=markup)
     mem.sync_mem()
 
 @bot.message_handler(commands=['tts'])
