@@ -7,42 +7,86 @@ from collections import defaultdict
 
 # parameters
 languages = {
-    'English': {
+    'English (US)': {
+        'name': 'English (US)',
         'lang': 'en',
-        'tld': {
-            'US': 'com',
-            'UK': 'co.uk',
-            'Australia': 'com.au',
-            'Canada': 'ca',
-            'New Zealand': 'co.nz',
-            'South Africa': 'co.za',
-            'India': 'in',
-            'Ireland': 'ie',
-        }
+        'tld': 'com'
     },
-    'Spanish': {
+    'English (UK)': {
+        'name': 'English (UK)',
+        'lang': 'en',
+        'tld': 'co.uk'
+    },
+    'English (Australia)': {
+        'name': 'English (Australia)',
+        'lang': 'en',
+        'tld': 'com.au'
+    },
+    'English (Canada)': {
+        'name': 'English (Canada)',
+        'lang': 'en',
+        'tld': 'ca'
+    },
+    'English (New Zealand)': {
+        'name': 'English (New Zealand)',
+        'lang': 'en',
+        'tld': 'co.nz'
+    },
+    'English (Ireland)': {
+        'name': 'English (Ireland)',
+        'lang': 'en',
+        'tld': 'ie'
+    },
+    'English (South Africa)': {
+        'name': 'English (South Africa)',
+        'lang': 'en',
+        'tld': 'co.za'
+    },
+    'English (India)': {
+        'name': 'English (India)',
+        'lang': 'en',
+        'tld': 'in'
+    },
+    'Spanish (Mexico)': {
+        'name': 'Spanish (Mexico)',
         'lang': 'es',
-        'tld': {
-            'Spain': 'es',
-            'Mexico': 'com.mx',
-            'US': 'com',
-        }
+        'tld': 'com.mx'
     },
-    'Portuguese': {
+    'Spanish (Spain)': {
+        'name': 'Spanish (Spain)',
+        'lang': 'es',
+        'tld': 'es'
+    },
+    'Portuguese (Brazil)': {
+        'name': 'Portuguese (Brazil)',
         'lang': 'pt',
-        'tld': {
-            'Brazil': 'com.br',
-            'Portugal': 'pt',
-        }
+        'tld': 'com.br'
     },
-    'French': {
+    'Portuguese (Portugal)': {
+        'name': 'Portuguese (Portugal)',
+        'lang': 'pt',
+        'tld': 'pt'
+    },
+    'French (France)': {
+        'name': 'French (France)',
         'lang': 'fr',
-        'tld': {
-            'France': 'fr',
-            'Canada': 'ca',
-        }
+        'tld': 'fr'
+    },
+    'French (Canada)': {
+        'name': 'French (Canada)',
+        'lang': 'fr',
+        'tld': 'ca'
     }
 }
+
+def lang_params(lang):
+    '''
+    Returns the parameters for the given language.
+    '''
+    if lang in languages:
+        return languages[lang]['name'], languages[lang]['lang'], languages[lang]['tld']
+    else:
+        return False
 
 # classes
 class memo:
@@ -80,7 +124,7 @@ class memo:
         else:
             try:
                 self.df = pd.read_sql('SELECT * FROM user_prefs', self.engine)
-                self.user_prefs = self.df.to_dict('index')
+                self.user_prefs = self.df.to_dict(orient='index')
             except:
                 self.create_mem()
 
@@ -92,5 +136,5 @@ class memo:
             with open('mem/user_prefs.pkl', 'wb') as f:
                 pickle.dump(self.user_prefs, f)
         else:
-            self.df = pd.DataFrame(self.user_prefs)
+            self.df = pd.DataFrame.from_dict(self.user_prefs, orient='index')
             self.df.to_sql('user_prefs', self.engine, if_exists='replace', index=False)

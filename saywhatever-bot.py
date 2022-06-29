@@ -110,50 +110,8 @@ def setup(message):
 
 @bot.message_handler(commands=[])
 def setup_lang(message):
-    if message.text == 'No':
-        return
-    if message.text == 'English (US)':
-        lang = 'en'
-        tld = 'com'
-    elif message.text == 'English (UK)':
-        lang = 'en'
-        tld = 'co.uk'
-    elif message.text == 'English (Australia)':
-        lang = 'en'
-        tld = 'com.au'
-    elif message.text == 'English (Canada)':
-        lang = 'en'
-        tld = 'ca'
-    elif message.text == 'English (New Zealand)':
-        lang = 'en'
-        tld = 'co.nz'
-    elif message.text == 'English (Ireland)':
-        lang = 'en'
-        tld = 'ie'
-    elif message.text == 'English (South Africa)':
-        lang = 'en'
-        tld = 'co.za'
-    elif message.text == 'English (India)':
-        lang = 'en'
-        tld = 'in'
-    elif message.text == 'Spanish (Mexico)':
-        lang = 'es'
-        tld = 'com.mx'
-    elif message.text == 'Spanish (Spain)':
-        lang = 'es'
-        tld = 'es'
-    elif message.text == 'Portuguese (Brazil)':
-        lang = 'pt'
-        tld = 'com.br'
-    elif message.text == 'Portuguese (Portugal)':
-        lang = 'pt'
-        tld = 'pt'
-    elif message.text == 'French (France)':
-        lang = 'fr'
-        tld = 'fr'
-    elif message.text == 'French (Canada)':
-        lang = 'fr'
-        tld = 'ca'
+    if message.text in languages:
+        name, lang, tld = lang_params(message.text)
     elif message.text == 'Yes':
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add('English (US)', 'English (UK)', 'English (Australia)', 'English (Canada)', 'English (New Zealand)', 'English (Ireland)', 'English (South Africa)', 'English (India)', 'Spanish (Mexico)', 'Spanish (Spain)', 'Portuguese (Brazil)', 'Portuguese (Portugal)', 'French (France)', 'French (Canada)')
@@ -164,7 +122,7 @@ def setup_lang(message):
         markup = types.ReplyKeyboardRemove(selective=False)
         bot.send_message(message.chat.id, 'No changes made to your preferred language/accent.', reply_markup=markup)
         return
-    mem.user_prefs[message.from_user.id] = {'name': message.text, 'lang': lang, 'tld': tld}
+    mem.user_prefs[message.from_user.id] = {'name': name, 'lang': lang, 'tld': tld}
     markup = types.ReplyKeyboardRemove(selective=False)
     bot.send_message(message.chat.id, f'Your preferred language/accent has been set to {mem.user_prefs[message.from_user.id]["name"]}.\nYou can use me in other chats by starting your message with @SayWhateverBot, or send me a private message starting with /tts. For a full list of commands, type /help.', reply_markup=markup)
     mem.sync_mem()
