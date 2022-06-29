@@ -6,6 +6,9 @@ from telebot import types
 from gtts import gTTS
 from io import BytesIO
 import requests
+import psycopg2
+import sqlalchemy
+import pandas as pd
 from utils import *
 
 # load api token and owner id
@@ -13,6 +16,16 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 OWNER_ID = int(os.getenv('OWNER_ID'))
 DUMP_ID = int(os.getenv('DUMP_ID'))
+DATABASE_URL = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql+psycopg2://')
+
+# try creating database engine, or fallback to dict memory
+try:
+    engine = sqlalchemy.create_engine(DATABASE_URL)
+    mem = memo(engine)
+    print('Using PostgreSQL database')
+except Exception as e:
+    mem = memo()
+    print(f'Using local dict database due to error: {e}')
 
 def get_audio(text, lang='en', tld='com'):
     tts = gTTS(text=text, lang=lang, tld=tld)
@@ -26,9 +39,6 @@ def get_audio(text, lang='en', tld='com'):
 
 # create bot
 bot = telebot.TeleBot(TOKEN)
-
-# start bot memory
-mem = memo()
 
 @bot.message_handler(commands=['help'])
 def start(message):
@@ -71,7 +81,7 @@ def reset(message):
         print(type(message.chat.id))
         print(message.chat.id)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'setup'])
 def setup(message):
     if message.from_user.id in mem.user_prefs:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)

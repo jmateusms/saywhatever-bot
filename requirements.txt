@@ -1,4 +1,7 @@
-gTTS==2.2.4
-pyTelegramBotAPI==4.5.1
+gtts==2.2.4
+pandas==1.4.3
+psycopg2==2.9.3
+pyTelegramBotAPI==4.6.0
 python-dotenv==0.20.0
-requests==2.22.0
+requests==2.24.0
+SQLAlchemy==1.4.39
