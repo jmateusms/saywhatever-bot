@@ -5,6 +5,7 @@ import telebot
 from telebot import types
 from gtts import gTTS
 from io import BytesIO
+from flask import Flask, request
 import requests
 import psycopg2
 import sqlalchemy
@@ -39,6 +40,18 @@ def get_audio(text, lang='en', tld='com'):
 
 # create bot
 bot = telebot.TeleBot(TOKEN)
+
+server = Flask(__name__)
+
+bot.remove_webhook()
+bot.set_webhook(url='https://saywhatever-bot.herokuapp.com/' + TOKEN)
+
+@server.route('/' + TOKEN, methods=['POST'])
+def webhook():
+    json_string = request.stream.read().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return "!", 200
 
 @bot.message_handler(commands=['help'])
 def start(message):
@@ -482,15 +495,4 @@ def frca(message, ignore_size=False):
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 if __name__ == '__main__':
-    while True:
-        try:
-            bot.polling(non_stop=True)
-            # yes, this is ugly, but it crashes sometimes otherwise due to
-            # random timeouts
-        except telebot.apihelper.ApiTelegramException as e:
-            print(e)
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-        except requests.exceptions.ReadTimeout as e:
-            print(e)
-
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
