@@ -124,7 +124,14 @@ class memo:
         else:
             try:
                 self.df = pd.read_sql('SELECT * FROM user_prefs', self.engine)
-                self.user_prefs = self.df.to_dict(orient='index')
+                raw_user_prefs = self.df.to_dict(orient='index')
+                self.user_prefs = defaultdict(dict)
+                for key, value in raw_user_prefs.items():
+                    self.user_prefs[value['index']] = {
+                        'name': value['name'],
+                        'lang': value['lang'],
+                        'tld': value['tld']
+                    }
             except:
                 self.create_mem()
 
@@ -137,4 +144,4 @@ class memo:
                 pickle.dump(self.user_prefs, f)
         else:
             self.df = pd.DataFrame.from_dict(self.user_prefs, orient='index')
-            self.df.to_sql('user_prefs', self.engine, if_exists='replace', index=False)
+            self.df.to_sql('user_prefs', self.engine, if_exists='replace', index=True)
