@@ -7,9 +7,7 @@ from gtts import gTTS
 from io import BytesIO
 from flask import Flask, request
 import requests
-import psycopg2
 import sqlalchemy
-import pandas as pd
 from utils import *
 
 # load api token and owner id
