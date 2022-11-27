@@ -16,6 +16,8 @@ TOKEN = os.getenv('TOKEN')
 OWNER_ID = int(os.getenv('OWNER_ID'))
 DUMP_ID = int(os.getenv('DUMP_ID'))
 DATABASE_URL = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql+psycopg2://')
+APP_URL = os.getenv('APP_URL')
+USE_POLLING = os.getenv('USE_POLLING')
 
 # try creating database engine, or fallback to dict memory
 try:
@@ -41,15 +43,33 @@ bot = telebot.TeleBot(TOKEN)
 
 server = Flask(__name__)
 
-bot.remove_webhook()
-bot.set_webhook(url='https://saywhatever-bot.herokuapp.com/' + TOKEN)
+if USE_POLLING is not None:
+    if USE_POLLING.lower() in ['true', '1', 'yes']:
+        USE_POLLING = True
+        print('Using polling')
+    else:
+        USE_POLLING = False
+        print('Using webhook')
 
-@server.route('/' + TOKEN, methods=['POST'])
-def webhook():
-    json_string = request.stream.read().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return "!", 200
+if not USE_POLLING:
+
+    APP_URL = os.getenv('APP_URL')
+
+    server = Flask(__name__)
+
+    @server.route("/")
+    def webhook():
+        bot.remove_webhook()
+        # time.sleep(1)
+        bot.set_webhook(url=APP_URL+TOKEN)
+        return "!", 200
+
+    @server.route('/' + TOKEN, methods=['POST'])
+    def getMessage():
+        json_string = request.stream.read().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return "!", 200
 
 @bot.message_handler(commands=['help'])
 def start(message):
@@ -451,4 +471,13 @@ def frca(message, ignore_size=False):
             bot.send_message(message.chat.id, 'Your text could not be spoken.')
 
 if __name__ == '__main__':
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    if USE_POLLING:
+        bot.remove_webhook()
+        while True:
+            try:
+                bot.polling(non_stop=True)
+            except Exception as e:
+                print(e)
+    else:
+        PORT = int(os.environ.get('PORT', 5000))
+        server.run(host="0.0.0.0", port=PORT)
